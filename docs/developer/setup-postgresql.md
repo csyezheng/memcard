@@ -42,6 +42,8 @@
 ### Log into postgres
 `sudo su - postgres`
 
+
+
 ### Create a new user
 > Note: user can be called anything however if you create a PostgreSQL user with the same name as your Linux username, it allows you to access the PostgreSQL database shell without having to specify a user to login (which makes it quite convenient).
 
@@ -50,6 +52,17 @@
 Use the -d option to connect to the database you created
 ```
 psql -d postgres
+```
+
+### Show users
+
+```
+postgres=# \du
+```
+
+### Change a user's password
+```
+ALTER USER root WITH ENCRYPTED PASSWORD 'root';
 ```
 ```
 ALTER USER user WITH ENCRYPTED PASSWORD 'password';
@@ -69,6 +82,10 @@ ALTER USER user WITH ENCRYPTED PASSWORD 'password';
 
 `sudo systemctl status postgresql`
 
+### Connect
+```
+psql -h 127.0.0.1 -p 5432 -d postgres -U root -W
+```
 
 ## Reference
 [postgresql_plus_arch-linux.md](https://gist.github.com/NickMcSweeney/3444ce99209ee9bd9393ae6ab48599d8)
