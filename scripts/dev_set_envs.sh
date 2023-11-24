@@ -44,7 +44,7 @@ function set_postgresql_env() {
   export DB_PORT=5432
   export DB_USER="root"
   export DB_PASSWORD="root"
-  export DB_NAME="postgresql"
+  export DB_NAME="postgres"
   export DB_SSLMODE="disable"
   echo "set postgresql env"
   echo "set postgresql environment variables successfully"
@@ -73,3 +73,5 @@ case $DB_ENGINE in
      ;;
 esac
 
+export AUTH_SERVICE_DEBUG="true"
+export AUTH_SERVICE_PORT="8080"

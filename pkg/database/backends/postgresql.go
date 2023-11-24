@@ -18,18 +18,18 @@ type Postgresql struct {
 	SSLMode  string `env:"DB_SSLMODE"`
 }
 
-func (db Postgresql) GetEngine() string {
-	return db.Engine
-}
-
-func (db Postgresql) DSN() string {
-	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s", db.User, db.Password, db.Host, db.Port, db.Name, db.SSLMode)
-}
-
 func NewPostgresql() *Postgresql {
 	var postgresql Postgresql
 	if err := env.Parse(&postgresql); err != nil {
 		fmt.Printf("%+v\n", err)
 	}
 	return &postgresql
+}
+
+func (db Postgresql) GetEngine() string {
+	return db.Engine
+}
+
+func (db Postgresql) DSN() string {
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s", db.User, db.Password, db.Host, db.Port, db.Name, db.SSLMode)
 }

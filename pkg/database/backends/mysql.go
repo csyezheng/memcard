@@ -17,6 +17,14 @@ type Mysql struct {
 	SSLMode  string `env:"DB_SSLMODE"`
 }
 
+func NewMysql() *Mysql {
+	mysql := Mysql{}
+	if err := env.Parse(&mysql); err != nil {
+		fmt.Printf("%+v\n", err)
+	}
+	return &mysql
+}
+
 func (db Mysql) GetEngine() string {
 	return db.Engine
 }
@@ -24,12 +32,4 @@ func (db Mysql) GetEngine() string {
 func (db Mysql) DSN() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&tls=%s",
 		db.User, db.Password, db.Host, db.Port, db.Name, db.SSLMode)
-}
-
-func NewMysql() *Mysql {
-	mysql := Mysql{}
-	if err := env.Parse(&mysql); err != nil {
-		fmt.Printf("%+v\n", err)
-	}
-	return &mysql
 }
