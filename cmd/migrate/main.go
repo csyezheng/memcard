@@ -6,7 +6,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/csyezheng/memcard/pkg/conf"
+	"github.com/csyezheng/memcard/pkg/configs"
 	"github.com/csyezheng/memcard/pkg/logging"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
@@ -34,7 +34,7 @@ func main() {
 	logger := logging.NewLoggerFromEnv()
 	ctx = logging.AttachLogger(ctx, logger)
 
-	config := conf.DefaultConfig()
+	config := configs.DefaultConfig()
 	engine := config.DatabaseBackend.GetEngine()
 	dsn := config.DatabaseBackend.DSN()
 

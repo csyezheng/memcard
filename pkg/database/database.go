@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/csyezheng/memcard/pkg/conf"
+	"github.com/csyezheng/memcard/pkg/configs"
 	"github.com/csyezheng/memcard/pkg/database/backends"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -49,7 +49,7 @@ func (db *Database) Close() error {
 
 // LoadDatabase initialize database instance, it does not connect to the database.
 func LoadDatabase() (*Database, error) {
-	config := conf.DefaultConfig()
+	config := configs.DefaultConfig()
 	backend := config.DatabaseBackend
 	return &Database{
 		backend: backend,

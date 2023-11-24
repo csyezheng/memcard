@@ -1,4 +1,4 @@
-package conf
+package configs
 
 import (
 	"github.com/csyezheng/memcard/pkg/database/backends"
