@@ -72,6 +72,6 @@ func (s *Server) ServeHTTP(ctx context.Context, srv *http.Server) error {
 func (s *Server) ServeHTTPHandler(ctx context.Context, handler http.Handler) error {
 	return s.ServeHTTP(ctx, &http.Server{
 		ReadHeaderTimeout: 10 * time.Second,
-		Handler: handler,
+		Handler:           handler,
 	})
 }

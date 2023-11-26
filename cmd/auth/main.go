@@ -5,9 +5,9 @@ import (
 	"github.com/csyezheng/memcard/internal/auth/routers"
 	"github.com/csyezheng/memcard/internal/auth/services"
 	"github.com/csyezheng/memcard/pkg/configs"
-	"github.com/csyezheng/memcard/pkg/database"
 	"github.com/csyezheng/memcard/pkg/logging"
 	"github.com/csyezheng/memcard/pkg/server"
+	"github.com/csyezheng/memcard/pkg/setup"
 	"log"
 	"os/signal"
 	"syscall"
@@ -25,16 +25,17 @@ func main() {
 
 	// Setup database
 	backend := config.DatabaseBackend
-	db, err := database.LoadDatabase(backend)
+	env, err := setup.Setup(ctx, backend)
 	if err != nil {
-		log.Fatalln("failed to load database config: %w", err)
+		log.Fatalln("setup.Setup: %w", err)
 	}
-	if err := db.Open(); err != nil {
-		log.Fatalln("failed to connect to database: %w", err)
-	}
-	defer db.Close()
+	defer env.Close(ctx)
 
-	service := services.NewService(db)
+	service, err := services.NewService(config, env)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	router := routers.RegisterRoutes(service)
 
 	srv, err := server.NewServer(config.Port)

@@ -10,10 +10,9 @@ import (
 	"github.com/csyezheng/memcard/pkg/logging"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
-	"github.com/golang-migrate/migrate/v4/database/mysql"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v5"
 	"log"
 	"os/signal"
 	"syscall"
@@ -37,8 +36,16 @@ func main() {
 	config := configs.DefaultConfig()
 	engine := config.DatabaseBackend.GetEngine()
 	dsn := config.DatabaseBackend.DSN()
+	logger.Debug(engine)
+	logger.Debug(dsn)
 
-	db, err := sql.Open(engine, dsn)
+	var driverName string
+	switch engine {
+	case "postgresql":
+		driverName = "postgres"
+	}
+
+	db, err := sql.Open(driverName, dsn)
 	if err != nil {
 		logger.Error(err.Error())
 	}
@@ -47,8 +54,6 @@ func main() {
 	switch engine {
 	case "postgresql":
 		driver, err = postgres.WithInstance(db, &postgres.Config{})
-	case "mysql":
-		driver, err = mysql.WithInstance(db, &mysql.Config{})
 	}
 
 	if err != nil {

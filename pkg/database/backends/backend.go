@@ -17,10 +17,8 @@ func DefaultBackend() Backend {
 	switch engine {
 	case "postgresql":
 		backend = NewPostgresql()
-	case "mysql":
-		backend = NewMysql()
 	default:
-		log.Fatalln("Unsupported database backend，only mysql, postgresql supported")
+		log.Fatalln("Unsupported database backend，only postgresql supported")
 	}
 	return backend
 }

@@ -1,32 +1,36 @@
 package database
 
 import (
+	"context"
+	"database/sql"
 	"github.com/csyezheng/memcard/pkg/database/backends"
-	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/csyezheng/memcard/pkg/logging"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"log"
 	"sync"
 )
 
 // Database is a handle to the database layer
 type Database struct {
-	db      *gorm.DB
+	db      *sql.DB
 	dbLock  sync.Mutex
 	backend backends.Backend
 }
 
+func NewDatabase(backend backends.Backend) *Database {
+	return &Database{
+		backend: backend,
+	}
+}
+
 // Open creates a database connection. This should only be called once.
 func (db *Database) Open() error {
-	var rawDB *gorm.DB
+	var rawDB *sql.DB
 	var err error
 	switch db.backend.GetEngine() {
 	case "postgresql":
 		dsn := db.backend.DSN()
-		rawDB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	case "mysql":
-		dsn := db.backend.DSN()
-		rawDB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		rawDB, err = sql.Open("pgx", dsn)
 	default:
 		log.Fatalf("not supported database engine: %s", db.backend.GetEngine())
 	}
@@ -38,17 +42,12 @@ func (db *Database) Open() error {
 }
 
 // Close will close the database connection. Should be deferred right after Open.
-func (db *Database) Close() error {
-	sqlDB, err := db.db.DB()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	return sqlDB.Close()
+func (db *Database) Close(ctx context.Context) error {
+	logger := logging.FromContext(ctx)
+	logger.Info("Closing database connection.")
+	return db.db.Close()
 }
 
-// LoadDatabase initialize database instance, it does not connect to the database.
-func LoadDatabase(backend backends.Backend) (*Database, error) {
-	return &Database{
-		backend: backend,
-	}, nil
+func (db *Database) Execute(f func(db *sql.DB) error) error {
+	return f(db.db)
 }

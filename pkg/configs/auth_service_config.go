@@ -8,8 +8,8 @@ import (
 
 type AuthServiceConfig struct {
 	DatabaseBackend backends.Backend
-	Debug bool `env:"AUTH_SERVICE_DEBUG"`
-	Port string `env:"AUTH_SERVICE_PORT"`
+	Debug           bool   `env:"AUTH_SERVICE_DEBUG"`
+	Port            string `env:"AUTH_SERVICE_PORT"`
 }
 
 func NewAuthServiceConfig() *AuthServiceConfig {

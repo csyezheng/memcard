@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-# usage: ./scripts/dev_set_envs.sh --db-engine postgresql --log-level INFO --log-form text
+# usage: ./scripts/dev_set_envs.sh --db-engine postgresql --log-level INFO --log-forms text
 
 format=$(getopt -n "$0" -l "db-engine:,log-level:,log-form:" -- -- "$@")
 
@@ -12,7 +12,7 @@ do
      case "$1" in
           --db-engine) DB_ENGINE="$2"; shift;;
           --log-level) LOG_LEVEL="$2"; shift;;
-          --log-form) LOG_FORM="$2"; shift;;
+          --log-forms) LOG_FORM="$2"; shift;;
           --) shift;;
      esac
      shift;
@@ -23,7 +23,7 @@ if [ -z "$DB_ENGINE" ]; then
 fi
 
 if [ -z "$LOG_LEVEL" ]; then
-	LOG_LEVEL="INFO"
+	LOG_LEVEL="DEBUG"
 fi
 
 if [ -z "$LOG_FORM" ]; then
@@ -74,4 +74,4 @@ case $DB_ENGINE in
 esac
 
 export AUTH_SERVICE_DEBUG="true"
-export AUTH_SERVICE_PORT="8080"
+export AUTH_SERVICE_PORT="8000"
